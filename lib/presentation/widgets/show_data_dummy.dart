@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:application_demo/presentation/widgets/dialog_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,6 +14,9 @@ class ShowDataDummy extends ConsumerWidget {
     return IconButton(
       onPressed: () {
         final List<DataModel> data = ref.watch(dataProvider);
+
+        if (data.isEmpty) log('data is empty');
+
         for (final item in data) {
           final index = data.indexOf(item);
 
