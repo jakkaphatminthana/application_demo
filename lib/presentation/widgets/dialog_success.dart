@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class SuccessDialog extends StatelessWidget {
-  final VoidCallback onRefreshPressed;
+  final VoidCallback onPressed;
 
-  const SuccessDialog({required this.onRefreshPressed});
+  const SuccessDialog({required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class SuccessDialog extends StatelessWidget {
         TextButton(
           onPressed: () {
             Navigator.pop(context);
-            onRefreshPressed();
+            onPressed();
           },
           child: const Text('ยืนยัน'),
         ),
