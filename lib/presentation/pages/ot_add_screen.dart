@@ -6,6 +6,7 @@ import 'package:application_demo/data/models/file_model.dart';
 import 'package:application_demo/domain/data_provider.dart';
 import 'package:application_demo/domain/ot_form_provider.dart';
 import 'package:application_demo/presentation/pages/nextpage.dart';
+import 'package:application_demo/presentation/widgets/dialog_error.dart';
 import 'package:application_demo/presentation/widgets/dialog_success.dart';
 import 'package:application_demo/presentation/widgets/ot_file.dart';
 import 'package:application_demo/presentation/widgets/ot_pick_date.dart';
@@ -98,14 +99,15 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
       (isStartTime) ? pickedTime.hour : startDate.hour,
       (isStartTime) ? pickedTime.minute : startTime.minute,
     );
+
+    //ถ้าเวลาต่ำกว่า 30 นาที
     Duration duration = datetimeEnd.difference(datetimeStart);
-    if (duration > Duration.zero) {
+    if (duration > const Duration(minutes: 30)) {
       return true;
     } else {
-      Fluttertoast.showToast(
-        msg: 'โปรดเลือกเวลาให้ถูกต้อง',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
+      showDialog(
+        context: context,
+        builder: (BuildContext conntext) => const DialogErrorOT(),
       );
       return false;
     }

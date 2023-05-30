@@ -16,10 +16,11 @@ TextStyle textButton({required Color color}) {
   );
 }
 
-final textTitleSmall = GoogleFonts.getFont(
+final textH2Medium = GoogleFonts.getFont(
   'Prompt',
-  color: const Color(0xFF8B8E95),
-  fontSize: 14,
+  color: Colors.black,
+  fontSize: 18,
+  fontWeight: FontWeight.w500,
 );
 
 final textTitleMedium = GoogleFonts.getFont(
@@ -29,6 +30,12 @@ final textTitleMedium = GoogleFonts.getFont(
   fontWeight: FontWeight.w500,
 );
 
+final textTitleSmall = GoogleFonts.getFont(
+  'Prompt',
+  color: const Color(0xFF8B8E95),
+  fontSize: 14,
+);
+
 final textBodyMedium = GoogleFonts.getFont(
   'Prompt',
   color: Colors.black,
@@ -36,6 +43,12 @@ final textBodyMedium = GoogleFonts.getFont(
 );
 
 final textBody2 = GoogleFonts.getFont(
+  'Prompt',
+  color: const Color(0xFF8B8E95),
+  fontSize: 14,
+);
+
+final textDescription1 = GoogleFonts.getFont(
   'Prompt',
   color: const Color(0xFF8B8E95),
   fontSize: 14,
