@@ -32,9 +32,13 @@ class DialogErrorOT extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              FittedBox(child: Text('จำนวนชั่วโมงน้อยกว่ากำหนด', style: textH2Medium)),
+              //TODO 2: Title Message
+              FittedBox(
+                  child:
+                      Text('จำนวนชั่วโมงน้อยกว่ากำหนด', style: textH2Medium)),
               const SizedBox(height: 8),
 
+              //TODO 3: SubTitle
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.6,
                 child: Text(
@@ -45,6 +49,7 @@ class DialogErrorOT extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
+              //TODO 4: Button
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -56,10 +61,7 @@ class DialogErrorOT extends StatelessWidget {
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-                child: Text(
-                  'ตกลง',
-                  style: textButton(color: Colors.white),
-                ),
+                child: Text('ตกลง', style: textButton(color: Colors.white)),
               ),
             ],
           ),

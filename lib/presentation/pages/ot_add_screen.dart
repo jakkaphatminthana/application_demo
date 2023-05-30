@@ -77,8 +77,6 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
 
   //TODO 3: Check Time Difference
   bool _checkTimeDifference({
-    required TimeOfDay pickedTime,
-    required bool isStartTime,
     required DateTime startDate,
     required DateTime endDate,
     required TimeOfDay startTime,
@@ -88,28 +86,24 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
       endDate.year,
       endDate.month,
       endDate.day,
-      (isStartTime) ? endTime.hour : pickedTime.hour,
-      (isStartTime) ? endTime.minute : pickedTime.minute,
+      endTime.hour,
+      endTime.minute,
     );
 
     final datetimeStart = DateTime(
       startDate.year,
       startDate.month,
       startDate.day,
-      (isStartTime) ? pickedTime.hour : startDate.hour,
-      (isStartTime) ? pickedTime.minute : startTime.minute,
+      startDate.hour,
+      startTime.minute,
     );
 
     //ถ้าเวลาต่ำกว่า 30 นาที
     Duration duration = datetimeEnd.difference(datetimeStart);
-    if (duration > const Duration(minutes: 30)) {
-      return true;
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext conntext) => const DialogErrorOT(),
-      );
+    if (duration >= const Duration(minutes: 30)) {
       return false;
+    } else {
+      return true;
     }
   }
 
@@ -120,7 +114,13 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
     final endDate = ref.read(endDateProvider);
     final startTime = ref.read(startTimeProvider);
     final endTime = ref.read(endTimeProvider);
-
+    bool checkTime = _checkTimeDifference(
+      startDate: startDate,
+      endDate: endDate,
+      startTime: startTime,
+      endTime: endTime,
+    );
+    //TODO 4.1: Check IsEmpty
     if (_descriptionController.text.isEmpty ||
         _selectedImages.isEmpty ||
         filePick == null) {
@@ -129,8 +129,14 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
       );
+      //TODO 4.2: Check Time Difference
+    } else if (checkTime) {
+      showDialog(
+        context: context,
+        builder: (BuildContext conntext) => const DialogErrorOT(),
+      );
     } else {
-      //add data
+      //Add data
       ref.read(dataProvider.notifier).addState(DataModel(
             startDate: startDate,
             endDate: endDate,
@@ -288,19 +294,7 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
                       title: 'เวลาเริ่มต้น',
                       timeValue: startTime,
                       onSelect: (pickedTime) {
-                        bool check = _checkTimeDifference(
-                          pickedTime: pickedTime,
-                          isStartTime: true,
-                          startDate: startDate,
-                          startTime: startTime,
-                          endDate: endDate,
-                          endTime: endTime,
-                        );
-                        if (check) {
-                          ref.read(startTimeProvider.notifier).state =
-                              pickedTime;
-                        }
-                        return;
+                        ref.read(startTimeProvider.notifier).state = pickedTime;
                       },
                     ),
                   ],
@@ -327,18 +321,7 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
                       title: 'เวลาสิ้นสุด',
                       timeValue: endTime,
                       onSelect: (pickedTime) {
-                        bool check = _checkTimeDifference(
-                          pickedTime: pickedTime,
-                          isStartTime: false,
-                          startDate: startDate,
-                          startTime: startTime,
-                          endDate: endDate,
-                          endTime: endTime,
-                        );
-                        if (check) {
-                          ref.read(endTimeProvider.notifier).state = pickedTime;
-                        }
-                        return;
+                        ref.read(endTimeProvider.notifier).state = pickedTime;
                       },
                     ),
                   ],
