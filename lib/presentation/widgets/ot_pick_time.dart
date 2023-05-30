@@ -30,6 +30,12 @@ class _PickerDateState extends ConsumerState<PickerTime> {
     showTimePicker(
       context: context,
       initialTime: starterTime,
+      builder: (context, childWidget) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: childWidget!,
+        );
+      },
     ).then((pickerTime) {
       if (pickerTime == null) return;
       onSelect(pickerTime); //อัปเดตค่า
