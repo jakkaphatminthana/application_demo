@@ -5,7 +5,7 @@ class DataNotifier extends StateNotifier<List<DataModel>> {
   DataNotifier() : super([]);
 
   void addState(DataModel data) {
-    state = [...state];
+    state = [...state, data];
   }
 }
 

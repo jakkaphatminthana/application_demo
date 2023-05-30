@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:application_demo/data/models/data_model.dart';
@@ -466,6 +467,18 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
           backgroundColor: Colors.white,
           centerTitle: true,
           title: Text("ยื่นขอ OT", style: textAppbar),
+          actions: [
+            IconButton(
+              onPressed: () {
+                final data = ref.watch(dataProvider);
+                log('data: $data');
+              },
+              icon: const Icon(
+                Icons.remove_red_eye,
+                color: Colors.black,
+              ),
+            ),
+          ],
         ),
         body: SingleChildScrollView(
           child: Padding(
