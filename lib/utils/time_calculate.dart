@@ -26,5 +26,10 @@ String calculateDuration({
   int hours = duration.inHours;
   int minutes = duration.inMinutes.remainder(60);
 
+  if (hours < 0) {
+    hours = 0;
+    minutes = 0;
+  }
+
   return '$hours ชั่วโมง $minutes นาที';
 }

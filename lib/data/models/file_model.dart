@@ -1,13 +1,16 @@
-import 'package:file_picker/file_picker.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class FileDocument {
-  String name;
-  double size;
-  PlatformFile file;
+part 'file_model.freezed.dart';
+part 'file_model.g.dart';
 
-  FileDocument({
-    required this.name,
-    required this.size,
-    required this.file,
-  });
+@freezed
+class FileDocument with _$FileDocument {
+  const factory FileDocument({
+    @Default('') String name,
+    @Default(0) double size,
+    @Default('') String pathFile,
+  }) = _FileDocument;
+
+  factory FileDocument.fromJson(Map<String, dynamic> json) =>
+      _$FileDocumentFromJson(json);
 }

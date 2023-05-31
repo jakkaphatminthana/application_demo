@@ -1,9 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:application_demo/data/models/data_model.dart';
 import 'package:application_demo/data/models/file_model.dart';
-import 'package:application_demo/domain/data_provider.dart';
+import 'package:application_demo/data/models/ot_form_entity.dart';
 import 'package:application_demo/domain/ot_form_provider.dart';
 import 'package:application_demo/presentation/pages/nextpage.dart';
 import 'package:application_demo/presentation/widgets/dialog_error.dart';
@@ -33,7 +32,7 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
   final _descriptionController = TextEditingController();
   late List<File> _selectedImages;
 
-  //TODO 1.1: Pick Images
+  //TODO 1.1: Function Pick Images
   void _pickImage() async {
     List<XFile>? resultList = [];
     try {
@@ -51,7 +50,7 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
     }
   }
 
-  //TODO 1.2 Remove Image
+  //TODO 1.2 Fuction Remove Image
   void _removeImage({required int index}) {
     setState(() {
       _selectedImages.removeAt(index);
@@ -72,10 +71,10 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
 
     //update value
     ref.read(filePickProvider.notifier).state =
-        FileDocument(name: file.name, size: fileSize, file: file);
+        FileDocument(name: file.name, size: fileSize, pathFile: file.path!);
   }
 
-  //TODO 3: Check Time Difference
+  //TODO 3: Function Check Time Difference
   bool _checkTimeDifference({
     required DateTime startDate,
     required DateTime endDate,
@@ -109,21 +108,19 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
 
   //TODO 4: Function Submit Form
   void _onSubmit() {
-    final filePick = ref.read(filePickProvider);
-    final startDate = ref.read(startDateProvider);
-    final endDate = ref.read(endDateProvider);
-    final startTime = ref.read(startTimeProvider);
-    final endTime = ref.read(endTimeProvider);
+    final _filePick = ref.read(filePickProvider);
+    final otForm = ref.read(otFormProvider);
+
     bool checkTime = _checkTimeDifference(
-      startDate: startDate,
-      endDate: endDate,
-      startTime: startTime,
-      endTime: endTime,
+      startDate: otForm.startDate!,
+      endDate: otForm.endDate!,
+      startTime: otForm.startTime!,
+      endTime: otForm.endTime!,
     );
     //TODO 4.1: Check IsEmpty
     if (_descriptionController.text.isEmpty ||
         _selectedImages.isEmpty ||
-        filePick == null) {
+        _filePick == null) {
       Fluttertoast.showToast(
         msg: 'โปรดกรอกข้อมูลให้ครบถ้วน',
         toastLength: Toast.LENGTH_SHORT,
@@ -136,18 +133,15 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
         builder: (BuildContext conntext) => const DialogErrorOT(),
       );
     } else {
-      //Add data
-      ref.read(dataProvider.notifier).addState(DataModel(
-            startDate: startDate,
-            endDate: endDate,
-            startTime: startTime,
-            endTime: endTime,
+      //Add New data
+      final newData = ref.read(otFormProvider).copyWith(
             description: _descriptionController.text,
             images: _selectedImages,
-            file: filePick,
-          ));
+            file: _filePick,
+          );
+      ref.read(otFormNotifierProvider.notifier).addData(newData);
 
-      //Dialog rePage
+      //Dialog Successful
       showDialog(
         context: context,
         builder: (BuildContext context) => SuccessDialog(
@@ -251,10 +245,7 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
   @override
   Widget build(BuildContext context) {
     final filePick = ref.watch(filePickProvider);
-    final startDate = ref.watch(startDateProvider);
-    final endDate = ref.watch(endDateProvider);
-    final startTime = ref.watch(startTimeProvider);
-    final endTime = ref.watch(endTimeProvider);
+    final otForm = ref.watch(otFormProvider);
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -281,10 +272,13 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
                     PickerDate(
                       icon: Icons.calendar_today_outlined,
                       title: 'วันที่เริ่มต้น',
-                      dateValue: startDate,
+                      dateValue: otForm.startDate ?? DateTime.now(),
                       firstDay: DateTime(DateTime.now().year),
                       onSelect: (pickedDate) {
-                        ref.read(startDateProvider.notifier).state = pickedDate;
+                        ref.read(otFormProvider.notifier).state = ref
+                            .read(otFormProvider.notifier)
+                            .state
+                            .copyWith(startDate: pickedDate);
                       },
                     ),
 
@@ -292,9 +286,12 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
                     PickerTime(
                       icon: Icons.access_time_outlined,
                       title: 'เวลาเริ่มต้น',
-                      timeValue: startTime,
+                      timeValue: otForm.startTime ?? TimeOfDay.now(),
                       onSelect: (pickedTime) {
-                        ref.read(startTimeProvider.notifier).state = pickedTime;
+                        ref.read(otFormProvider.notifier).state = ref
+                            .read(otFormProvider.notifier)
+                            .state
+                            .copyWith(startTime: pickedTime);
                       },
                     ),
                   ],
@@ -304,24 +301,30 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    //TODO 2.1: End DatePick
+                    // //TODO 2.1: End DatePick
                     PickerDate(
                       icon: Icons.calendar_today_outlined,
                       title: 'วันที่สิ้นสุด',
-                      dateValue: endDate,
-                      firstDay: DateTime.now(),
+                      dateValue: otForm.endDate ?? DateTime.now(),
+                      firstDay: otForm.startDate ?? DateTime.now(),
                       onSelect: (pickedDate) {
-                        ref.read(endDateProvider.notifier).state = pickedDate;
+                        ref.read(otFormProvider.notifier).state = ref
+                            .read(otFormProvider.notifier)
+                            .state
+                            .copyWith(endDate: pickedDate);
                       },
                     ),
 
-                    //TODO 2.2: End TimePick
+                    // //TODO 2.2: End TimePick
                     PickerTime(
                       icon: Icons.access_time_outlined,
                       title: 'เวลาสิ้นสุด',
-                      timeValue: endTime,
+                      timeValue: otForm.endTime ?? TimeOfDay.now(),
                       onSelect: (pickedTime) {
-                        ref.read(endTimeProvider.notifier).state = pickedTime;
+                        ref.read(otFormProvider.notifier).state = ref
+                            .read(otFormProvider.notifier)
+                            .state
+                            .copyWith(endTime: pickedTime);
                       },
                     ),
                   ],
@@ -373,7 +376,9 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
                       if (index < _selectedImages.length) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 1),
+                            horizontal: 8,
+                            vertical: 1,
+                          ),
                           child: selectedImage(
                             imageFile: _selectedImages[index],
                             index: index,
@@ -383,7 +388,9 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
                       } else {
                         return Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 1),
+                            horizontal: 8,
+                            vertical: 1,
+                          ),
                           child: selectImage(),
                         );
                       }
@@ -437,10 +444,10 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
                   child: Center(
                     child: Text(
                       calculateDuration(
-                        startDate: startDate,
-                        endDate: endDate,
-                        startTime: startTime,
-                        endTime: endTime,
+                        startDate: otForm.startDate!,
+                        endDate: otForm.endDate!,
+                        startTime: otForm.startTime!,
+                        endTime: otForm.endTime!,
                       ),
                       style: textButton(color: Colors.black),
                     ),

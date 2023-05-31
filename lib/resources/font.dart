@@ -60,3 +60,15 @@ final textDescription2 = GoogleFonts.getFont(
   color: const Color(0xFF8B8E95),
   fontSize: 12,
 );
+
+
+
+
+
+
+//-------------------------------------------------------------------------------------------------------------------------
+final textTitleSmallError = GoogleFonts.getFont(
+  'Prompt',
+  color: Colors.redAccent,
+  fontSize: 14,
+);

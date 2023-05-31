@@ -1,10 +1,9 @@
 import 'dart:developer';
 
+import 'package:application_demo/data/models/ot_form_entity.dart';
+import 'package:application_demo/domain/ot_form_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../data/models/data_model.dart';
-import '../../domain/data_provider.dart';
 
 class ShowDataDummy extends ConsumerWidget {
   const ShowDataDummy({super.key});
@@ -13,7 +12,7 @@ class ShowDataDummy extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
       onPressed: () {
-        final List<DataModel> data = ref.watch(dataProvider);
+        final List<OTFormEntity> data = ref.watch(otFormNotifierProvider);
 
         if (data.isEmpty) log('data is empty');
 
