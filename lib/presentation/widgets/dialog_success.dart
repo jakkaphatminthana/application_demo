@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class SuccessDialog extends StatelessWidget {
+class OTSuccessDialog extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const SuccessDialog({required this.onPressed});
+  const OTSuccessDialog({required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

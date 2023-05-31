@@ -2,8 +2,8 @@ import 'package:application_demo/resources/font.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class DialogErrorOT extends StatelessWidget {
-  const DialogErrorOT({super.key});
+class OTDialogError extends StatelessWidget {
+  const OTDialogError({super.key});
 
   @override
   Widget build(BuildContext context) {

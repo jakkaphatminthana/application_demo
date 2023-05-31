@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:application_demo/data/models/file_model.dart';
-import 'package:application_demo/data/models/ot_form_entity.dart';
 import 'package:application_demo/domain/ot_form_provider.dart';
 import 'package:application_demo/presentation/pages/nextpage.dart';
 import 'package:application_demo/presentation/widgets/dialog_error.dart';
@@ -130,7 +129,7 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
     } else if (checkTime) {
       showDialog(
         context: context,
-        builder: (BuildContext conntext) => const DialogErrorOT(),
+        builder: (BuildContext conntext) => const OTDialogError(),
       );
     } else {
       //Add New data
@@ -144,7 +143,7 @@ class _AddOtScreenState extends ConsumerState<AddOtScreen> {
       //Dialog Successful
       showDialog(
         context: context,
-        builder: (BuildContext context) => SuccessDialog(
+        builder: (BuildContext context) => OTSuccessDialog(
           onPressed: () {
             Navigator.pushReplacement(
               context,
